@@ -1,46 +1,83 @@
-# name: infra-pipeline
-
-# trigger: none
-# pool: Azure Agents
-
-# stages:
-#   - stage: initValidatePlan
-#     displayName: Init, Validate, Plan
-#     jobs:
-#     checks:
-#       - 
-
-
-name: infra-pipeline-steps
+name: infra-pipeline
 
 trigger: none
 pool: Azure Agents
-steps: 
-- task: TerraformInstaller@1
-  inputs:
-    terraformVersion: 'latest'
-- task: TerraformTask@5
-  displayName: Terraform Init
-  inputs:
-    provider: 'azurerm'
-    command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
-    backendServiceArm: 'servconn'
-    backendAzureRmStorageAccountName: 'stgrishabh'
-    backendAzureRmContainerName: 'rishabhcontainer'
-    backendAzureRmKey: 'infra.tfstate'
 
-- task: TerraformTask@5
-  displayName: Terraform Validate
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+stages:
+  - stage: initValidatePlan
+    displayName: Init, Validate, Plan
+    jobs:
+      - job: initValidatePlanJob
+        displayName: initValidatePlan
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          displayName: Terraform Init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+            backendServiceArm: 'servconn'
+            backendAzureRmStorageAccountName: 'stgrishabh'
+            backendAzureRmContainerName: 'rishabhcontainer'
+            backendAzureRmKey: 'infra.tfstate'
 
-- task: TerraformTask@5
-  displayName: Terraform Plan
-  inputs:
-    provider: 'azurerm'
-    command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
-    environmentServiceNameAzureRM: 'servconn'
+        - task: TerraformTask@5
+          displayName: Terraform Validate
+          inputs:
+            provider: 'azurerm'
+            command: 'validate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+
+        - task: TerraformTask@5
+          displayName: Terraform Plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+            environmentServiceNameAzureRM: 'servconn'
+
+  - stage: SecurityScan
+    displayName: Security Scan
+    jobs:
+      - job: initValidatePlanJob
+        displayName: initValidatePlan
+        # steps:
+
+
+
+# name: infra-pipeline-steps
+
+# trigger: none
+# pool: Azure Agents
+# steps: 
+# - task: TerraformInstaller@1
+#   inputs:
+#     terraformVersion: 'latest'
+# - task: TerraformTask@5
+#   displayName: Terraform Init
+#   inputs:
+#     provider: 'azurerm'
+#     command: 'init'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+#     backendServiceArm: 'servconn'
+#     backendAzureRmStorageAccountName: 'stgrishabh'
+#     backendAzureRmContainerName: 'rishabhcontainer'
+#     backendAzureRmKey: 'infra.tfstate'
+
+# - task: TerraformTask@5
+#   displayName: Terraform Validate
+#   inputs:
+#     provider: 'azurerm'
+#     command: 'validate'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+
+# - task: TerraformTask@5
+#   displayName: Terraform Plan
+#   inputs:
+#     provider: 'azurerm'
+#     command: 'plan'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+#     environmentServiceNameAzureRM: 'servconn'
