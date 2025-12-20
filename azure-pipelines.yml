@@ -10,6 +10,10 @@ stages:
       - job: initValidatePlanJob
         displayName: initValidatePlan
         steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: '1.14.3'
+
         # - task: TerraformInstaller@1
         #   inputs:
         #     terraformVersion: 'latest'
