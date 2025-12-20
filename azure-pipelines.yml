@@ -44,7 +44,12 @@ stages:
     jobs:
       - job: initValidatePlanJob
         displayName: initValidatePlan
-        # steps:
+        steps:
+        - task: tfsec@1
+          inputs:
+            version: 'v1.26.0'
+            publishTestResults: false
+            dir: '$(System.DefaultWorkingDirectory)'
 
 
 
