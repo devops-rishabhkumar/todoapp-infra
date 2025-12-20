@@ -1,7 +1,25 @@
+name: infra-pipeline
+
 trigger: none
 pool: Azure Agents
 steps: 
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
-    
+- task: TerraformTask@5
+displayName: Terraform Init
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
+    backendServiceArm: 'servconn'
+    backendAzureRmStorageAccountName: 'stgrishabh'
+    backendAzureRmContainerName: 'rishabhcontainer'
+    backendAzureRmKey: 'infra.tfstate'
+
+- task: TerraformTask@5
+displayName: Terraform Validate
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/environment/dev'
