@@ -1,4 +1,17 @@
-name: infra-pipeline
+# name: infra-pipeline
+
+# trigger: none
+# pool: Azure Agents
+
+# stages:
+#   - stage: initValidatePlan
+#     displayName: Init, Validate, Plan
+#     jobs:
+#     checks:
+#       - 
+
+
+name: infra-pipeline-steps
 
 trigger: none
 pool: Azure Agents
